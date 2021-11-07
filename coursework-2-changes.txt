@@ -1,0 +1,2 @@
+src/boot/config.h:55 - WARP_BUILD_ENABLE_FRDMKL03 set to 1
+src/boot/boot.c set i2cAddress to 0x1D
