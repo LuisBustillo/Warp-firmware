@@ -1,2 +1,2 @@
-src/boot/config.h:55 - WARP_BUILD_ENABLE_FRDMKL03 set to 1
+src/boot/config.h:55 - WARP_BUILD_ENABLE_FRDMKL03 set to 1 which means WARP_BUILD_ENABLE_DEVMMA8451Q set to 1, which means devMMA8451Q.h is included
 src/boot/boot.c set i2cAddress to 0x1D

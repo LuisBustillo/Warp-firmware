@@ -1,3 +1,217 @@
 2)
 	By default, the I2C address is 0x1D (SA0 pulled high).
 	WHO_AM_I(1) R 0x0D 0x0E 00011010 0x1A Device ID (0x1A)
+
+
+See https://www.segger.com/products/debug-probes/j-link/models/other-j-links/opensda-sda-v2/#compatible-evaluation-boards for which OpenSDA bootloader version matches your FRDM board.
+
+Download it and drag into the device storage that appears when you plug in the FRDM KL03Z
+
+
+Booting Warp, in 3... 2... 1...
+
+
+About to switch CPU to VLPR mode... done.
+About to GPIO_DRV_Init()... done.
+About to lowPowerPinStates()... done.
+Boot done.
+
+
+
+
+[ *                             Warp (HW revision C) / Glaux (HW revision B)                    * ]
+[                                     Cambridge / Physcomplab                                     ]
+
+        Supply=1800mV,  Default Target Read Register=0x00
+        I2C=200kb/s,    SPI=10000kb/s,  UART=115200b/s, I2C Pull-Up=3
+
+        SIM->SCGC6=0x20000001           RTC->SR=0x10            RTC->TSR=0x56871300
+        MCG_C1=0x42                     MCG_C2=0x00             MCG_S=0x04
+        MCG_SC=0x00                     MCG_MC=0x00             OSC_CR=0x00
+        SMC_PMPROT=0x22                 SMC_PMCTRL=0x40         SCB->SCR=0x00
+        PMC_REGSC=0x00                  SIM_SCGC4=0xF0000030    RTC->TPR=0x00
+
+        0s in RTC Handler to-date,      0 Pmgr Errors
+Select:
+- 'a': set default sensor.
+- 'b': set I2C baud rate.
+- 'c': set SPI baud rate.
+- 'd': set UART baud rate.
+- 'e': set default register address.
+- 'f': write byte to sensor.
+- 'g': set default sensor supply voltage.
+- 'h': powerdown command to all sensors.
+- 'i': set pull-up enable value.
+- 'j': repeat read reg 0x00 on sensor #3.
+- 'k': sleep until reset.
+- 'l': send repeated byte on I2C.
+- 'm': send repeated byte on SPI.
+- 'n': enable sensor supply voltage.
+- 'o': disable sensor supply voltage.
+- 'r': switch to RUN mode.
+- 's': power up all sensors.
+- 't': dump processor state.
+- 'u': set I2C address.
+- 'x': disable SWD and spin for 10 secs.
+- 'z': perpetually dump all sensor data.
+        Select:> a
+        - '1' ADXL362                   (0x00--0x2D): 1.6V -- 3.5V (compiled out)
+        - '2' BMX055accel               (0x00--0x3F): 2.4V -- 3.6V (compiled out)
+        - '3' BMX055gyro                        (0x00--0x3F): 2.4V -- 3.6V (compiled out)
+        - '4' BMX055mag                 (0x40--0x52): 2.4V -- 3.6V (compiled out)
+        - '5' MMA8451Q                  (0x00--0x31): 1.95V -- 3.6V
+        - '6' LPS25H                    (0x08--0x24): 1.7V -- 3.6V (compiled out)
+        - '7' MAG3110                   (0x00--0x11): 1.95V -- 3.6V (compiled out)
+        - '8' HDC1000                   (0x00--0x1F): 3.0V -- 5.0V (compiled out)
+        - '9' SI7021                    (0x00--0x0F): 1.9V -- 3.6V (compiled out)
+        - 'b' BME680                    (0xAA--0xF8): 1.6V -- 3.6V (compiled out)
+        - 'd' TCS34725                  (0x00--0x1D): 2.7V -- 3.3V (compiled out)
+        - 'e' SI4705                    (n/a):        2.7V -- 5.5V (compiled out)
+        - 'g' CCS811                    (0x00--0xFF): 1.8V -- 3.6V (compiled out)
+        - 'h' AMG8834                   (0x00--?): 3.3V -- 3.3V (compiled out)
+        - 'j' AS7262                    (0x00--0x2B): 2.7V -- 3.6V (compiled out)
+        - 'k' AS7263                    (0x00--0x2B): 2.7V -- 3.6V (compiled out)
+        Enter selection> 5
+
+
+
+[ *                             Warp (HW revision C) / Glaux (HW revision B)                    * ]
+        Supply=1800mV,  Default Target Read Register=0x00pla
+        I2C=200kb/s,    SPI=10000kb/s,  UART=115200b/s, I2C Pull-Up=1
+
+        SIM->SCGC6=0x20000001           RTC->SR=0x10            RTC->TSR=0x56871308
+        MCG_C1=0x42                     MCG_C2=0x00             MCG_S=0x06
+        MCG_SC=0x00                     MCG_MC=0x00             OSC_CR=0x00
+        SMC_PMPROT=0x22                 SMC_PMCTRL=0x40         SCB->SCR=0x00
+        PMC_REGSC=0x00                  SIM_SCGC4=0xF0000030    RTC->TPR=0x2281
+
+        0s in RTC Handler to-date,      0 Pmgr Errors
+Select:
+- 'a': set default sensor.
+- 'b': set I2C baud rate.
+- 'c': set SPI baud rate.
+- 'd': set UART baud rate.
+- 'e': set default register address.
+- 'f': write byte to sensor.
+- 'g': set default sensor supply voltage.
+- 'h': powerdown command to all sensors.
+- 'i': set pull-up enable value.
+- 'j': repeat read reg 0x00 on sensor #1.
+- 'k': sleep until reset.
+- 'l': send repeated byte on I2C.
+- 'm': send repeated byte on SPI.
+- 'n': enable sensor supply voltage.
+- 'p': switch to VLPR mode.
+- 'r': switch to RUN mode.
+- 's': power up all sensors.
+- 't': dump processor state.
+- 'u': set I2C address.
+- 'x': disable SWD and spin for 10 secs.
+- 'z': perpetually dump all sensor data.
+Enter selection> g
+        Override sensor supply voltage in mV (e.g., '1800')> 1800
+        Override sensor supply voltage set to 1800 mV
+
+
+
+[ *                             Warp (HW revision C) / Glaux (HW revision B)                    * ]
+        Supply=1800mV,  Default Target Read Register=0x00pla
+        I2C=200kb/s,    SPI=10000kb/s,  UART=115200b/s, I2C Pull-Up=7191
+
+        SIM->SCGC6=0x20000001           RTC->SR=0x10            RTC->TSR=0x5687130D
+        MCG_C1=0x42                     MCG_C2=0x00             MCG_S=0x06
+        MCG_SC=0x00                     MCG_MC=0x00             OSC_CR=0x00
+        SMC_PMPROT=0x22                 SMC_PMCTRL=0x40         SCB->SCR=0x00
+        PMC_REGSC=0x00                  SIM_SCGC4=0xF0000030    RTC->TPR=0x7B8A
+
+        0s in RTC Handler to-date,      0 Pmgr Errors
+Select:
+- 'a': set default sensor.
+- 'b': set I2C baud rate.
+- 'c': set SPI baud rate.
+- 'd': set UART baud rate.
+- 'e': set default register address.
+- 'f': write byte to sensor.
+- 'g': set default sensor supply voltage.
+- 'h': powerdown command to all sensors.
+- 'i': set pull-up enable value.
+- 'j': repeat read reg 0x00 on sensor #1.
+- 'k': sleep until reset.
+- 'l': send repeated byte on I2C.
+- 'm': send repeated byte on SPI.
+- 'n': enable sensor supply voltage.
+- 'o': disable sensor supply voltage.
+- 'p': switch to VLPR mode.
+- 'r': switch to RUN mode.
+- 's': power up all sensors.
+- 't': dump processor state.
+- 'u': set I2C address.
+- 'x': disable SWD and spin for 10 secs.
+- 'z': perpetually dump all sensor data.
+Enter selection> j
+        Auto-increment from base address 0x00? ['0' | '1']> 1
+        Chunk reads per address (e.g., '1')> 1
+        Chatty? ['0' | '1']> 1
+        Inter-operation spin delay in milliseconds (e.g., '0000')> 0000
+        Repetitions per address (e.g., '0000')> 0000
+        Maximum voltage for adaptive supply (e.g., '0000')> 2000
+        Reference byte for comparisons (e.g., '3e')> 00
+        Repeating dev1 @ 0x00, reps=0, pull=0, delay=0ms:
+
+
+MMA8451Q:
+        0x00 --> 0x00
+        0x01 --> 0x14
+        0x02 --> 0xB4
+        0x03 --> 0x41
+        0x04 --> 0x74
+        0x05 --> 0xEF
+        0x06 --> 0x00
+        0x09 --> 0x00
+        0x0A --> 0x00
+        0x0B --> 0x00
+        0x0C --> 0x00
+        0x0D --> 0x1A
+        0x0E --> 0x00
+        0x0F --> 0x00
+        0x10 --> 0x00
+        0x11 --> 0x80
+        0x12 --> 0x00
+        0x13 --> 0x44
+        0x14 --> 0x84
+        0x15 --> 0x00
+        0x16 --> 0x00
+        0x17 --> 0x00
+        0x18 --> 0x00
+        0x1D --> 0x00
+        0x1E --> 0x00
+        0x1F --> 0x00
+        0x20 --> 0x00
+        0x21 --> 0x00
+        0x22 --> 0x00
+        0x23 --> 0x00
+        0x24 --> 0x00
+        0x25 --> 0x00
+        0x26 --> 0x00
+        0x27 --> 0x00
+        0x28 --> 0x00
+        0x29 --> 0x00
+        0x2A --> 0x00
+        0x2B --> 0x00
+        0x2C --> 0x00
+        0x2D --> 0x00
+        0x2E --> 0x00
+        0x2F --> 0x00
+        0x30 --> 0x00
+        0x31 --> 0x00
+
+        44/44 success rate.
+        35/44 successes matched ref. value of 0x00.
+        6 bad commands.
+
+
+
+
+
+[ *                             Warp (HW revision C) / Glaux (HW revision B)                    * ]
+[                                     Cambridge / Physcomplab                                     ]
