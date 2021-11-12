@@ -84,7 +84,7 @@ devSSD1331init(void)
 	 *
 	 *	Reconfigure to use as GPIO.
 	 */
-	PORT_HAL_SetMuxMode(PORTB_BASE, 13u, kPortMuxAsGpio);
+	PORT_HAL_SetMuxMode(PORTB_BASE, 11u, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTA_BASE, 12u, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTB_BASE, 0u, kPortMuxAsGpio);
 
@@ -173,7 +173,6 @@ devSSD1331init(void)
 	writeCommand(0x00); // Outline component C (blue) is 0
 	writeCommand(0x3f); // Outline component B (green) is max
 	writeCommand(0x00); // Outline component A (red) is 0
-
 
 	return 0;
 }
