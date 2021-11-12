@@ -170,9 +170,9 @@ devSSD1331init(void)
 	writeCommand(0x00); // Outline component C (blue) is 0
 	writeCommand(0x3f); // Outline component B (green) is max
 	writeCommand(0x00); // Outline component A (red) is 0
-	writeCommand(0x00); // Outline component C (blue) is 0
-	writeCommand(0x3f); // Outline component B (green) is max
-	writeCommand(0x00); // Outline component A (red) is 0
+	writeCommand(0x00); // Fill component C (blue) is 0
+	writeCommand(0x3f); // Fill component B (green) is max
+	writeCommand(0x00); // Fill component A (red) is 0
 
 	return 0;
 }
