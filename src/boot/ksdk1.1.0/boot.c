@@ -66,6 +66,9 @@
 
 
 
+
+
+
 #define							kWarpConstantStringI2cFailure		"\rI2C failed, reg 0x%02x, code %d\n"
 #define							kWarpConstantStringErrorInvalidVoltage	"\rInvalid supply voltage [%d] mV!"
 #define							kWarpConstantStringErrorSanity		"\rSanity check failed!"
@@ -106,6 +109,11 @@
 #if (WARP_BUILD_ENABLE_DEVMMA8451Q)
 	#include "devMMA8451Q.h"
 	volatile WarpI2CDeviceState			deviceMMA8451QState;
+#endif
+
+#if (WARP_BUILD_ENABLE_DEVINA219)
+	#include "devINA219.h"
+	volatile WarpI2CDeviceState			deviceINA219State;
 #endif
 
 #if (WARP_BUILD_ENABLE_DEVLPS25H)
@@ -1607,8 +1615,11 @@ main(void)
 		initBMX055mag(	0x10	/* i2cAddress */,	&deviceBMX055magState,		kWarpDefaultSupplyVoltageMillivoltsBMX055mag	);
 	#endif
 
+	#if (WARP_BUILD_ENABLE_DEVINA219)
+		initINA219(	0x40	/* i2cAddress */,		kWarpDefaultSupplyVoltageMillivoltsINA219	);
+	#endif
+
 	#if (WARP_BUILD_ENABLE_DEVMMA8451Q)
-//		initMMA8451Q(	0x1C	/* i2cAddress */,	&deviceMMA8451QState,		kWarpDefaultSupplyVoltageMillivoltsMMA8451Q	);
 		initMMA8451Q(	0x1D	/* i2cAddress */,		kWarpDefaultSupplyVoltageMillivoltsMMA8451Q	);
 	#endif
 
@@ -2021,6 +2032,7 @@ main(void)
 	#endif
 
 	devSSD1331init();
+//	initINA219(	0x1D	/* i2cAddress */,			kWarpDefaultSupplyVoltageMillivoltsINA219	);
 
 
 	while (1)
@@ -2102,6 +2114,13 @@ main(void)
 					warpPrint("\r\t- '5' MMA8451Q			(0x00--0x31): 1.95V -- 3.6V\n");
 				#else
 					warpPrint("\r\t- '5' MMA8451Q			(0x00--0x31): 1.95V -- 3.6V (compiled out) \n");
+				#endif
+
+				#if (WARP_BUILD_ENABLE_DEVINA219)
+					// TODO: fix the comment values
+					warpPrint("\r\t- 'n' INA219			**(0x00--0x31): 1.95V -- 3.6V\n");
+				#else
+					warpPrint("\r\t- 'n' INA219			**(0x00--0x31): 1.95V -- 3.6V (compiled out) \n");
 				#endif
 
 				#if (WARP_BUILD_ENABLE_DEVLPS25H)
@@ -2222,6 +2241,15 @@ main(void)
 						{
 							menuTargetSensor = kWarpSensorMMA8451Q;
 							menuI2cDevice = &deviceMMA8451QState;
+							break;
+						}
+					#endif
+
+					#if (WARP_BUILD_ENABLE_DEVINA219)
+						case 'n':
+						{
+							menuTargetSensor = kWarpSensorINA219;
+							menuI2cDevice = &deviceINA219State;
 							break;
 						}
 					#endif
@@ -2558,7 +2586,7 @@ main(void)
 			 */
 			case 'l':
 			case 'm':
-			{
+			{ 
 				uint8_t		outBuffer[1];
 				int		repetitions;
 
@@ -2801,6 +2829,12 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag, int menuDelay
 					0x01/* Normal read 8bit, 800Hz, normal, active mode */
 					);
 	#endif
+	#if (WARP_BUILD_ENABLE_DEVINA219)
+	// TODO: fix the arguments
+	numberOfConfigErrors += configureSensorINA219(kWarpSensorConfigConstINA219configDefault, // 001 00 0011 0011 111
+					kWarpSensorConfigConstINA219calibrationDefault // 40960
+					);
+	#endif
 	#if (WARP_BUILD_ENABLE_DEVMAG3110)
 	numberOfConfigErrors += configureSensorMAG3110(	0x00,/*	Payload: DR 000, OS 00, 80Hz, ADC 1280, Full 16bit, standby mode to set up register*/
 					0xA0,/*	Payload: AUTO_MRST_EN enable, RAW value without offset */
@@ -2881,6 +2915,10 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag, int menuDelay
 		#if (WARP_BUILD_ENABLE_DEVMMA8451Q)
 			warpPrint(" MMA8451 x, MMA8451 y, MMA8451 z,");
 		#endif
+		#if (WARP_BUILD_ENABLE_DEVINA219)
+			// TODO: Fix data column labels
+			warpPrint(" INA219 x, INA219 y, INA219 z,");
+		#endif
 
 		#if (WARP_BUILD_ENABLE_DEVMAG3110)
 			warpPrint(" MAG3110 x, MAG3110 y, MAG3110 z, MAG3110 Temp,");
@@ -2926,6 +2964,9 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag, int menuDelay
 
 		#if (WARP_BUILD_ENABLE_DEVMMA8451Q)
 			printSensorDataMMA8451Q(hexModeFlag);
+		#endif
+		#if (WARP_BUILD_ENABLE_DEVINA219)
+			printSensorDataINA219(hexModeFlag);
 		#endif
 
 		#if (WARP_BUILD_ENABLE_DEVMAG3110)
@@ -3168,6 +3209,36 @@ repeatRegisterReadForDeviceAndAddress(WarpSensorDevice warpSensorDevice, uint8_t
 			#endif
 
 			break;
+		}
+
+		case kWarpSensorINA219:
+		{
+			/*
+			 *	INA219: VDD 1.95--3.6
+			 */
+			// #if (WARP_BUILD_ENABLE_DEVINA219)
+			// 	loopForSensor(	"\r\nINA219:\n\r",		/*	tagString			*/
+			// 			&readSensorRegisterINA219,	/*	readSensorRegisterFunction	*/
+			// 			&deviceINA219State,		/*	i2cDeviceState			*/
+			// 			NULL,				/*	spiDeviceState			*/
+			// 			baseAddress,			/*	baseAddress			*/
+			// 			0x00,				/*	minAddress			*/
+			// 			0x31,				/*	maxAddress			*/
+			// 			repetitionsPerAddress,		/*	repetitionsPerAddress		*/
+			// 			chunkReadsPerAddress,		/*	chunkReadsPerAddress		*/
+			// 			spinDelay,			/*	spinDelay			*/
+			// 			autoIncrement,			/*	autoIncrement			*/
+			// 			sssupplyMillivolts,		/*	sssupplyMillivolts		*/
+			// 			referenceByte,			/*	referenceByte			*/
+			// 			adaptiveSssupplyMaxMillivolts,	/*	adaptiveSssupplyMaxMillivolts	*/
+			// 			chatty				/*	chatty				*/
+			// 			);
+			// #else
+			// 	warpPrint("\r\n\tINA219 Read Aborted. Device Disabled :(");
+			// #endif
+
+			break;
+
 		}
 
 		case kWarpSensorBME680:
@@ -3816,6 +3887,13 @@ activateAllLowPowerSensorModes(bool verbose)
 	 *	MMA8451Q: See 0x2B: CTRL_REG2 System Control 2 Register (page 43).
 	 *
 	 *	POR state seems to be not too bad.
+	 */
+
+
+	/*
+	 *	INA219: See 0x2B: CTRL_REG2 System Control 2 Register (page 43).
+	 *
+	 *	Unimplemented
 	 */
 
 

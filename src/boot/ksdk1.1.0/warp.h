@@ -70,6 +70,7 @@ typedef enum
 {
 	kWarpSensorADXL362,
 	kWarpSensorMMA8451Q,
+	kWarpSensorINA219,
 	kWarpSensorBME680,
 	kWarpSensorBMX055accel,
 	kWarpSensorBMX055gyro,
@@ -99,6 +100,10 @@ typedef enum
 {
 	kWarpSensorConfigurationRegisterMMA8451QF_SETUP			= 0x09,
 	kWarpSensorConfigurationRegisterMMA8451QCTRL_REG1		= 0x2A,
+
+	// TODO: Check SensorConfigurationRegister
+	kWarpSensorConfigurationRegisterINA219CONFIG			= 0x00,
+	kWarpSensorConfigurationRegisterINA219CALIBRATION		= 0x05,
 
 	kWarpSensorConfigurationRegisterMAG3110CTRL_REG1		= 0x10,
 	kWarpSensorConfigurationRegisterMAG3110CTRL_REG2		= 0x11,
@@ -163,6 +168,12 @@ typedef enum
 	kWarpSensorOutputRegisterMMA8451QOUT_Y_LSB			= 0x04,
 	kWarpSensorOutputRegisterMMA8451QOUT_Z_MSB			= 0x05,
 	kWarpSensorOutputRegisterMMA8451QOUT_Z_LSB			= 0x06,
+
+	// TODO: Check SensorOutputRegister
+	kWarpSensorOutputRegisterINA219SHUNT 	 			 	= 0x01,
+	kWarpSensorOutputRegisterINA219BUS		 			 	= 0x02,
+	kWarpSensorOutputRegisterINA219POWER					= 0x03,
+	kWarpSensorOutputRegisterINA219CURRENT					= 0x04,
 
 	kWarpSensorOutputRegisterMAG3110OUT_X_MSB			= 0x01,
 	kWarpSensorOutputRegisterMAG3110OUT_X_LSB			= 0x02,
@@ -248,7 +259,13 @@ typedef enum
 	kWarpSensorConfigConstADXL362registerWriteCommand		= 0x0A,
 	kWarpSensorConfigConstADXL362registerReadRegister		= 0x0B,
 	kWarpSensorConfigConstADXL362registerFIFORead			= 0x0D,
-	kWarpSensorConfigConstADXL362resetCode				= 0x52,
+	kWarpSensorConfigConstADXL362resetCode					= 0x52,
+
+	kWarpSensorConfigConstINA219configDefault				= 0x219F, // 001 00 0011 0011 111
+	kWarpSensorConfigConstINA219configReset					= 0x8000,
+	// These values have been acquired from calculations following the INA219 datasheet
+	kWarpSensorConfigConstINA219calibrationDefault			= 0xA000,
+	kWarpSensorConfigConstINA219currentLSBmA				= 10, //mA
 } WarpSensorConfigConst;
 
 typedef enum
