@@ -135,7 +135,7 @@ configureSensorINA219(uint16_t configBits, uint8_t calibrationValue)
 							);
 
 	i2cWriteStatus2 = writeSensorRegisterINA219(kWarpSensorConfigurationRegisterINA219CALIBRATION,
-							calbrationValue
+							calibrationValue
 							);
 
 	return (i2cWriteStatus1 | i2cWriteStatus2);
