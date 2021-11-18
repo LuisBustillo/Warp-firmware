@@ -144,7 +144,9 @@ configureSensorINA219(uint16_t configBits, uint8_t calibrationValue)
 WarpStatus
 readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 {
-	uint8_t		cmdBuf[1] = {0xFF};
+	warpPrint("0x%02x, %d", deviceRegister, numberOfBytes);
+
+	uint8_t		cmdBuf[1];
 	i2c_status_t	status;
 
 
@@ -184,7 +186,7 @@ readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 							(uint8_t *)deviceINA219State.i2cBuffer,
 							numberOfBytes,
 							gWarpI2cTimeoutMilliseconds);
-
+	warpPrint(status);
 	if (status != kStatus_I2C_Success)
 	{
 		return kWarpStatusDeviceCommunicationFailed;
