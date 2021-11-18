@@ -186,7 +186,7 @@ readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 							(uint8_t *)deviceINA219State.i2cBuffer,
 							numberOfBytes,
 							gWarpI2cTimeoutMilliseconds);
-	warpPrint("%d", status);
+	warpPrint(" s=%d", status);
 	if (status != kStatus_I2C_Success)
 	{
 		return kWarpStatusDeviceCommunicationFailed;
@@ -218,7 +218,7 @@ printSensorDataINA219(bool hexModeFlag)
 	 *	We therefore do 2-byte read transactions, for each of the registers.
 	 *	We could also improve things by doing a 6-byte read transaction.
 	 */
-	i2cReadStatus = readSensorRegisterINA219(kWarpSensorOutputRegisterINA219CURRENT, 2 /* numberOfBytes */);
+	i2cReadStatus = readSensorRegisterINA219(kWarpSensorOutputRegisterINA219CURRENT, 1 /* numberOfBytes */);
 	readSensorRegisterValueMSB = deviceINA219State.i2cBuffer[0];
 	readSensorRegisterValueLSB = deviceINA219State.i2cBuffer[1];
 	readSensorRegisterValueCombined = ((readSensorRegisterValueMSB & 0xFF) << 8) | (readSensorRegisterValueLSB);
