@@ -2033,7 +2033,7 @@ main(void)
 
 	devSSD1331init();
 	for (int i = 0; i < 20; i++) {
-		warpPrint(" %d", i);
+		warpPrint(" i=%d ", i);
 		printSensorDataINA219(0);
 	}
 
