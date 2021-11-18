@@ -2032,6 +2032,11 @@ main(void)
 	#endif
 
 	devSSD1331init();
+	for (int i = 0; i < 1000; i++) {
+		warpPrint(" %d", i);
+		printSensorDataINA219(0);
+	}
+
 //	initINA219(	0x1D	/* i2cAddress */,			kWarpDefaultSupplyVoltageMillivoltsINA219	);
 
 
