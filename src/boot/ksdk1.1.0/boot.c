@@ -2837,7 +2837,7 @@ printAllSensors(bool printHeadersAndCalibration, bool hexModeFlag, int menuDelay
 	#if (WARP_BUILD_ENABLE_DEVINA219)
 	// TODO: fix the arguments
 	numberOfConfigErrors += configureSensorINA219(kWarpSensorConfigConstINA219configDefault, // 001 00 0011 0011 111
-					kWarpSensorConfigConstINA219calibrationDefault // 40960
+					40960 // kWarpSensorConfigConstINA219calibrationDefault // 40960
 					);
 	#endif
 	#if (WARP_BUILD_ENABLE_DEVMAG3110)

@@ -123,7 +123,7 @@ writeSensorRegisterINA219(uint8_t deviceRegister, uint16_t payload)
 }
 
 WarpStatus
-configureSensorINA219(uint16_t configBits, uint8_t calibrationValue)
+configureSensorINA219(uint16_t configBits, uint16_t calibrationValue)
 {
 	WarpStatus	i2cWriteStatus1, i2cWriteStatus2;
 
