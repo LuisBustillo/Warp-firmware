@@ -144,7 +144,7 @@ configureSensorINA219(uint16_t configBits, uint16_t calibrationValue)
 WarpStatus
 readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 {
-	warpPrint("0x%02x, numbytes%d", deviceRegister, numberOfBytes);
+	// warpPrint("0x%02x, numbytes%d", deviceRegister, numberOfBytes);
 
 	uint8_t		cmdBuf[1];
 	i2c_status_t	status;
@@ -186,7 +186,7 @@ readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 							(uint8_t *)deviceINA219State.i2cBuffer,
 							numberOfBytes,
 							gWarpI2cTimeoutMilliseconds);
-	warpPrint(" s=%d", status);
+	// warpPrint(" s=%d", status);
 	if (status != kStatus_I2C_Success)
 	{
 		return kWarpStatusDeviceCommunicationFailed;
@@ -238,8 +238,8 @@ printSensorDataINA219(bool hexModeFlag)
 		}
 		else
 		{
-			warpPrint(" shunt = %d uV", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219shuntLSBmV);
-			warpPrint(" current = %d uA,",  kWarpSensorConfigConstINA219currentLSBmA * readSensorRegisterValueCombined * kWarpSensorConfigConstINA219calibrationDefault / 4096);
+			// warpPrint(" shunt = %d uV", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219shuntLSBmV);
+			warpPrint("%d uA\n",  kWarpSensorConfigConstINA219currentLSBmA * readSensorRegisterValueCombined * kWarpSensorConfigConstINA219calibrationDefault / 4096);
 		}
 	}
 }

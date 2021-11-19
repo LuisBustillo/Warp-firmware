@@ -2034,9 +2034,9 @@ main(void)
 	devSSD1331init();
 
 	#if (WARP_BUILD_ENABLE_DEVINA219)
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 1000; i++)
 		{
-			warpPrint(" i=%d ", i);
+			// warpPrint(" i=%d ", i);
 			printSensorDataINA219(0);
 		}
 	#endif
