@@ -144,7 +144,7 @@ configureSensorINA219(uint16_t configBits, uint16_t calibrationValue)
 WarpStatus
 readSensorRegisterINA219(uint8_t deviceRegister, int numberOfBytes)
 {
-	warpPrint("0x%02x, %d", deviceRegister, numberOfBytes);
+	warpPrint("0x%02x, numbytes%d", deviceRegister, numberOfBytes);
 
 	uint8_t		cmdBuf[1];
 	i2c_status_t	status;
@@ -233,11 +233,33 @@ printSensorDataINA219(bool hexModeFlag)
 	{
 		if (hexModeFlag)
 		{
-			warpPrint(" 0x%02x 0x%02x,", readSensorRegisterValueMSB, readSensorRegisterValueLSB);
+			warpPrint(" current = 0x%02x 0x%02x,", readSensorRegisterValueMSB, readSensorRegisterValueLSB);
 		}
 		else
 		{
-			warpPrint(" %d,", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219currentLSBmA);
+			warpPrint(" current = %d A,", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219currentLSBmA);
+		}
+	}
+	i2cReadStatus = readSensorRegisterINA219(kWarpSensorOutputRegisterINA219SHUNT, 2 /* numberOfBytes */);
+	readSensorRegisterValueMSB = deviceINA219State.i2cBuffer[0];
+	readSensorRegisterValueLSB = deviceINA219State.i2cBuffer[1];
+	readSensorRegisterValueCombined = ((readSensorRegisterValueMSB & 0xFF) << 8) | (readSensorRegisterValueLSB);
+
+	
+
+	if (i2cReadStatus != kWarpStatusOK)
+	{
+		warpPrint(" ----,");
+	}
+	else
+	{
+		if (hexModeFlag)
+		{
+			warpPrint(" shunt = 0x%02x 0x%02x,", readSensorRegisterValueMSB, readSensorRegisterValueLSB);
+		}
+		else
+		{
+			warpPrint(" shunt = %d uV", readSensorRegisterValueCombined); //  * kWarpSensorConfigConstINA219shuntLSBmV);
 		}
 	}
 }

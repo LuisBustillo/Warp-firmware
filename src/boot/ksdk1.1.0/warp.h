@@ -266,6 +266,7 @@ typedef enum
 	// These values have been acquired from calculations following the INA219 datasheet
 	kWarpSensorConfigConstINA219calibrationDefault			= 0xA000,
 	kWarpSensorConfigConstINA219currentLSBmA				= 10, //mA
+	kWarpSensorConfigConstINA219shuntLSBmV					= 10, //uV
 } WarpSensorConfigConst;
 
 typedef enum
