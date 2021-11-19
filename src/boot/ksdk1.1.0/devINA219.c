@@ -218,28 +218,7 @@ printSensorDataINA219(bool hexModeFlag)
 	 *	We therefore do 2-byte read transactions, for each of the registers.
 	 *	We could also improve things by doing a 6-byte read transaction.
 	 */
-	i2cReadStatus = readSensorRegisterINA219(kWarpSensorOutputRegisterINA219CURRENT, 2 /* numberOfBytes */);
-	readSensorRegisterValueMSB = deviceINA219State.i2cBuffer[0];
-	readSensorRegisterValueLSB = deviceINA219State.i2cBuffer[1];
-	readSensorRegisterValueCombined = ((readSensorRegisterValueMSB & 0xFF) << 8) | (readSensorRegisterValueLSB);
 
-	
-
-	if (i2cReadStatus != kWarpStatusOK)
-	{
-		warpPrint(" ----,");
-	}
-	else
-	{
-		if (hexModeFlag)
-		{
-			warpPrint(" current = 0x%02x 0x%02x,", readSensorRegisterValueMSB, readSensorRegisterValueLSB);
-		}
-		else
-		{
-			warpPrint(" current = %d A,", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219currentLSBmA);
-		}
-	}
 	i2cReadStatus = readSensorRegisterINA219(kWarpSensorOutputRegisterINA219SHUNT, 2 /* numberOfBytes */);
 	readSensorRegisterValueMSB = deviceINA219State.i2cBuffer[0];
 	readSensorRegisterValueLSB = deviceINA219State.i2cBuffer[1];
@@ -260,6 +239,7 @@ printSensorDataINA219(bool hexModeFlag)
 		else
 		{
 			warpPrint(" shunt = %d uV", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219shuntLSBmV);
+			warpPrint(" current = %d A,",  kWarpSensorConfigConstINA219currentLSBmA * readSensorRegisterValueCombined * kWarpSensorConfigConstINA219calibrationDefault / 4096);
 		}
 	}
 }
