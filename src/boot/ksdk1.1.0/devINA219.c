@@ -259,7 +259,7 @@ printSensorDataINA219(bool hexModeFlag)
 		}
 		else
 		{
-			warpPrint(" shunt = %d uV", readSensorRegisterValueCombined); //  * kWarpSensorConfigConstINA219shuntLSBmV);
+			warpPrint(" shunt = %d uV", readSensorRegisterValueCombined * kWarpSensorConfigConstINA219shuntLSBmV);
 		}
 	}
 }
