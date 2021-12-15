@@ -63,6 +63,7 @@
 #include "SEGGER_RTT.h"
 
 #include "devSSD1331.h"
+#include "devSSD1331_font.h"
 
 
 
