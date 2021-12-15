@@ -376,18 +376,21 @@ devSSD1331init(void)
 	 *	Any post-initialization drawing commands go here.
 	 */
 	//...
-	// Filling the screen with a green rectangle
-	writeCommand(0x22); // Rect Command is 0x22
-	writeCommand(0x00); // Start at column 0
-	writeCommand(0x00); // Start at row 0
-	writeCommand(0x5f); // End at column 95
-	writeCommand(0x3f); // End at row 63
-	writeCommand(0x00); // Outline component C (blue) is 0
-	writeCommand(0x3f); // Outline component B (green) is max
-	writeCommand(0x00); // Outline component A (red) is 0
-	writeCommand(0x00); // Fill component C (blue) is 0
-	writeCommand(0x3f); // Fill component B (green) is max
-	writeCommand(0x00); // Fill component A (red) is 0
+	// Set text colour to be white on black for ease
+	textcolor[0] = 0x3E ;
+	textcolor[1] = 0x3E ;
+	textcolor[2] = 0x3E ;
+	textbg[0] = 0x00;
+	textbg[1] = 0x00;
+	textbg[2] = 0x00;
+
+	textsize_x=3;
+	textsize_y=4;
+	// Loading text
+	writeText("WARP");
+	// Reset text size for fast writing
+	textsize_x = 1;
+	textsize_y = 1;
 
 	return 0;
 }
