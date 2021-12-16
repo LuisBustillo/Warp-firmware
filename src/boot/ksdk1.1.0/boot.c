@@ -2033,7 +2033,13 @@ main(void)
 	#endif
 
 	devSSD1331init();
-	printSensorDataMMA8451Q(0);
+	#if (WARP_BUILD_ENABLE_DEVMMA8451Q)
+		for (int i = 0; i < 1000; i++)
+		{
+			// warpPrint(" i=%d ", i);
+			printSensorDataMMA8451Q(0);
+		}
+	#endif
 
 	#if (WARP_BUILD_ENABLE_DEVINA219)
 		for (int i = 0; i < 1000; i++)
