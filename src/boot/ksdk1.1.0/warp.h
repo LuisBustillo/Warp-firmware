@@ -1,4 +1,6 @@
-#include "fsl_spi_master_driver.h"
+#include "config.h"
+#include "fsl_spi_master_driver.h"`
+
 
 #define	min(x,y)	((x) < (y) ? (x) : (y))
 #define	max(x,y)	((x) > (y) ? (x) : (y))
@@ -271,13 +273,6 @@ typedef enum
 
 typedef enum
 {
-	kWarpSizesI2cBufferBytes		= 4,
-	kWarpSizesSpiBufferBytes		= 4, /* Was 3 bytes */
-	kWarpSizesBME680CalibrationValuesCount	= 41,
-} WarpSizes;
-
-typedef enum
-{
 	kWarpMiscMarkerForAbsentByte					= 0xFF,
 } WarpMisc;
 
@@ -309,8 +304,8 @@ typedef struct
 typedef struct
 {
 	bool			isInitialized;
-	//uint8_t			uartTXBuffer[kWarpSizesUartBufferBytes];
-	//uint8_t			uartRXBuffer[kWarpSizesUartBufferBytes];
+	uint8_t			uartTXBuffer[kWarpSizesUartBufferBytes];
+	uint8_t			uartRXBuffer[kWarpSizesUartBufferBytes];
 	uint16_t		operatingVoltageMillivolts;
 } WarpUARTDeviceState;
 
