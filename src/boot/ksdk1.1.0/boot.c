@@ -2033,9 +2033,8 @@ main(void)
 
 
     // Configure accelerometer - set high pass filter to remove gravity offset
-    configureSensorMMA8451Q(0x00,/* Payload: Disable FIFO */         
-                            0x01/* Normal read 14bit, 800Hz, normal, active mode*/
-                            );
+    configureSensorMMA8451Q(0x00, /* Payload: Disable FIFO */         
+                            0x01 /* Normal read 14bit, 800Hz, normal, active mode*/);
 
     
     uint32_t    step_count          = 0;            // Tracks step count
