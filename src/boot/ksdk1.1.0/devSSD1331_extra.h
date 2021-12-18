@@ -40,15 +40,13 @@ typedef enum
 	kSSD1331CommandPRECHARGEC	= 0x8C,
 	kSSD1331CommandPRECHARGELEVEL	= 0xBB,
 	kSSD1331CommandVCOMH		= 0xBE,
+	kSSD1331CommandCOPY			= 0x23,
 } SSD1331Commands;
 
-int	devSSD1331init(void);
-int writeCommand(uint8_t commandByte);
-void devSSD1331green_rect(void);
+void writeText(char * text);
+
+void writeNumber(int16_t number);
+
+void writeFloat(float n);
+
 void clearScreen(void);
-void clearSection(uint8_t col_start, uint8_t row_start, uint8_t col_end, uint8_t row_end);
-
-void drawLine(uint8_t column, uint8_t row, uint8_t across, uint8_t down, uint32_t colour);
-void writeDigit(uint8_t column, uint8_t row, uint8_t digit, uint32_t colour);
-
-void writeCharacter(uint8_t column, uint8_t row, char character, uint32_t colour);
