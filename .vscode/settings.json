@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "fsl_port_hal.h": "c"
+        "fsl_port_hal.h": "c",
+        "segger_rtt.h": "c",
+        "fsl_mcglite_hal.h": "c"
     }
 }

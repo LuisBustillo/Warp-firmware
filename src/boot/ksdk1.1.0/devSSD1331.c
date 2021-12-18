@@ -9,7 +9,7 @@
 #include "fsl_port_hal.h"
 
 #include "SEGGER_RTT.h"
-#include "SEGGER_RTT_printf.h"
+//#include "SEGGER_RTT_printf.c"
 #include "gpio_pins.h"
 #include "warp.h"
 #include "devSSD1331.h"
