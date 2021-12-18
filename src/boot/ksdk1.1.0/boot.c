@@ -2033,12 +2033,8 @@ main(void)
 
 
     // Configure accelerometer - set high pass filter to remove gravity offset
-    configureSensorMMA8451Q(0x00,/* Payload: Disable FIFO */
-                            0x00,/* Normal read 14bit, 800Hz, normal, standby mode to write HP */
-                            0x11,/* 4G Scale, HPF data enabled */
-                            0x00,/* 16Hz cutoff */
-                            0x01,/* Normal read 14bit, 800Hz, normal, active mode*/
-                            32768
+    configureSensorMMA8451Q(0x00,/* Payload: Disable FIFO */         
+                            0x01/* Normal read 14bit, 800Hz, normal, active mode*/
                             );
 
     

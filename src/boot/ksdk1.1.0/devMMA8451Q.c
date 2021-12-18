@@ -131,31 +131,22 @@ writeSensorRegisterMMA8451Q(uint8_t deviceRegister, uint8_t payload)
 }
 
 WarpStatus
-configureSensorMMA8451Q(uint8_t payloadF_SETUP, uint8_t payloadCTRL_REG1_STB, uint8_t payloadXYZ_DATA, uint8_t payloadHP_CUTOFF, uint8_t payloadCTRL_REG1_ACT, uint16_t menuI2cPullupValue)
+configureSensorMMA8451Q(uint8_t payloadF_SETUP, uint8_t payloadCTRL_REG1)
 {
-	WarpStatus	i2cWriteStatus1, i2cWriteStatus2, i2cWriteStatus3, i2cWriteStatus4, i2cWriteStatus5;
+	WarpStatus	i2cWriteStatus1, i2cWriteStatus2;
+
+
+	warpScaleSupplyVoltage(deviceMMA8451QState.operatingVoltageMillivolts);
 
 	i2cWriteStatus1 = writeSensorRegisterMMA8451Q(kWarpSensorConfigurationRegisterMMA8451QF_SETUP /* register address F_SETUP */,
-							payloadF_SETUP /* payload: Disable FIFO */,
-							menuI2cPullupValue);
+							payloadF_SETUP /* payload: Disable FIFO */
+							);
 
 	i2cWriteStatus2 = writeSensorRegisterMMA8451Q(kWarpSensorConfigurationRegisterMMA8451QCTRL_REG1 /* register address CTRL_REG1 */,
-							payloadCTRL_REG1_STB /* payload */,
-							menuI2cPullupValue);
-    
-    i2cWriteStatus3 = writeSensorRegisterMMA8451Q(kWarpSensorConfigurationRegisterMMA8451QXYZ_DATA /* register address XYZ_DATA */,
-                            payloadXYZ_DATA /* payload */,
-                            menuI2cPullupValue);
-    
-    i2cWriteStatus4 = writeSensorRegisterMMA8451Q(kWarpSensorConfigurationRegisterMMA8451QHP_CUTOFF /* register address XYZ_DATA */,
-                            payloadHP_CUTOFF /* payload */,
-                            menuI2cPullupValue);
-    
-    i2cWriteStatus5 = writeSensorRegisterMMA8451Q(kWarpSensorConfigurationRegisterMMA8451QCTRL_REG1 /* register address CTRL_REG1 */,
-                            payloadCTRL_REG1_ACT /* payload */,
-                            menuI2cPullupValue);
+							payloadCTRL_REG1 /* payload */
+							);
 
-	return (i2cWriteStatus1 | i2cWriteStatus2 | i2cWriteStatus3 | i2cWriteStatus4 | i2cWriteStatus5);
+	return (i2cWriteStatus1 | i2cWriteStatus2);
 }
 
 WarpStatus
