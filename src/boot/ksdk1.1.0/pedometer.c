@@ -49,10 +49,10 @@ int16_t  combine_stream(int16_t x_data, int16_t y_data, int16_t z_data){
     
     int16_t comb_data = (int16_t)sqrt(x_data*x_data + y_data*y_data + z_data*z_data);
     
-    SEGGER_RTT_printf(0, "%d, ", x_data);
-    SEGGER_RTT_printf(0, "%d, ", y_data);
-    SEGGER_RTT_printf(0, "%d, ", z_data);
-    SEGGER_RTT_printf(0, "%d\n", comb_data);
+    //SEGGER_RTT_printf(0, "%d, ", x_data);
+    //SEGGER_RTT_printf(0, "%d, ", y_data);
+    //SEGGER_RTT_printf(0, "%d, ", z_data);
+    //SEGGER_RTT_printf(0, "%d\n", comb_data);
     
     
     return comb_data;

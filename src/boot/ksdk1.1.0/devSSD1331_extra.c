@@ -13,6 +13,7 @@
 #include "gpio_pins.h"
 #include "warp.h"
 #include "devSSD1331_extra.h"
+#include "devSSD1331_font.h"
 
 
 volatile uint8_t	inBuffer[1];
