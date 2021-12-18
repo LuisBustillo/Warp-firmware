@@ -13,7 +13,7 @@
 #include "gpio_pins.h"
 #include "warp.h"
 #include "devSSD1331.h"
-#include "devSSD1331_extra.h"
+//#include "devSSD1331_extra.h"
 
 volatile uint8_t	inBuffer[1];
 volatile uint8_t	payloadBytes[1];
@@ -161,22 +161,7 @@ devSSD1331init(void)
 	 *	Any post-initialization drawing commands go here.
 	 */
 	//...
-	// Set text colour to be white on black for ease
-	textcolor[0] = 0x3E ;
-	textcolor[1] = 0x3E ;
-	textcolor[2] = 0x3E ;
-	textbg[0] = 0x00;
-	textbg[1] = 0x00;
-	textbg[2] = 0x00;
-
-	textsize_x=3;
-	textsize_y=4;
-	// Loading text
-	writeText("PEDOMETER");
-	// Reset text size for fast writing
-	textsize_x = 1;
-	textsize_y = 1;
-
+	
 	return 0;
 }
 

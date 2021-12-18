@@ -17,10 +17,12 @@
 
 #include "gpio_pins.h"
 #include "SEGGER_RTT.h"
-#include "SEGGER_RTT_printf.h"
+//#include "SEGGER_RTT_printf.c"
 #include "warp.h"
 
 #include "devMMA8451Q.h"
+#include "pedometer.h"
+#include "devSSD1331.h"
 
 #define BUFF_LENGTH             9
 #define STEP_BUFF_LENGTH        150             // Record steps for last 3s for mode selection
@@ -218,3 +220,207 @@ uint8_t modeSelector(uint8_t mode, uint32_t last_step_time)
         return 1;
     }
 }
+
+// Define some standard colours
+#define WHITE           0xFFFFFF
+#define RED             0xFF0000
+#define GREEN           0x00FF00
+#define BLUE            0x0000FF
+#define CYAN            0x00FFFF
+
+// Define a dimmed brightness
+#define DIM             0x0A0A0A
+
+// User defined thresholds for 'completing rings'
+#define STEP_THRESHOLD  10
+#define CAL_THRESHOLD   10
+
+// Modes
+#define REST            0
+#define WALK            1
+#define RUN             2
+
+// User defined parameters
+#define HEIGHT          183         // Height in cm
+#define WEIGHT          80          // Weight in kg
+
+// Draw the background
+void displayBackground(uint8_t mode)
+{
+    uint32_t text_colour;
+    uint32_t line_colour;
+    
+    if(mode == REST)
+    {
+        text_colour = WHITE & DIM;      // Bitwise AND colour with DIM for dimmed colours
+        line_colour = CYAN & DIM;       // (only works for primary and secondary colours but will do for use here)
+    }
+    else
+    {
+        text_colour = WHITE;
+        line_colour = CYAN;
+    }
+    
+    // STEPS
+    writeCharacter(2, 63, 'S', text_colour);
+    writeCharacter(10, 63, 'T', text_colour);
+    writeCharacter(18, 63, 'E', text_colour);
+    writeCharacter(26, 63, 'P', text_colour);
+    writeCharacter(34, 63, 'S', text_colour);
+
+    // CALS
+    writeCharacter(57, 63, 'C', text_colour);
+    writeCharacter(65, 63, 'A', text_colour);
+    writeCharacter(73, 63, 'L', text_colour);
+    writeCharacter(81, 63, 'S', text_colour);
+    
+    // Draw Line
+    writeCommand(kSSD1331CommandDRAWLINE);
+    writeCommand(2);             // Col start
+    writeCommand(63-19);         // Row start
+    writeCommand(92);            // Col end
+    writeCommand(63-19);         // Row end
+    writeCommand((uint8_t)(line_colour >> 16) & 0xFF);          // Line red
+    writeCommand((uint8_t)(line_colour >> 8) & 0xFF);           // Line green
+    writeCommand((uint8_t)line_colour & 0xFF);                  // Line blue
+}
+
+// Draw the current mode
+void displayMode(uint8_t mode)
+{
+    
+    clearSection(20, 11, 76, 10);
+    
+    switch(mode)
+    {
+    case 0:
+    {
+    // ---
+    writeCharacter(36, 11, '-', WHITE & DIM);
+    writeCharacter(44, 11, '-', WHITE & DIM);
+    writeCharacter(52, 11, '-', WHITE & DIM);
+        
+    break;
+    }
+    
+    case 1:
+    {
+    // WALKING
+    writeCharacter(20, 11, 'W', WHITE);
+    writeCharacter(28, 11, 'A', WHITE);
+    writeCharacter(36, 11, 'L', WHITE);
+    writeCharacter(44, 11, 'K', WHITE);
+    writeCharacter(52, 11, 'I', WHITE);
+    writeCharacter(60, 11, 'N', WHITE);
+    writeCharacter(68, 11, 'G', WHITE);
+        
+    break;
+    }
+    
+    case 2:
+    {
+    // RUNNING
+    writeCharacter(20, 11, 'R', RED);
+    writeCharacter(28, 11, 'U', RED);
+    writeCharacter(36, 11, 'N', RED);
+    writeCharacter(44, 11, 'N', RED);
+    writeCharacter(52, 11, 'I', RED);
+    writeCharacter(60, 11, 'N', RED);
+    writeCharacter(68, 11, 'G', RED);
+    
+    break;
+    }
+    }
+}
+
+// Draw the various counts - keep centred wit number of digits
+void drawCount(uint8_t column, uint8_t row, uint32_t count, uint32_t colour)
+{
+    
+    clearSection(column, row, 45, 10);
+    
+    if(count < 10)
+    {
+        writeDigit(column + 18, row, count, colour);
+    }
+    else if(count < 100)
+    {
+        writeDigit(column + 23, row, count % 10, colour);
+        writeDigit(column + 14, row, count / 10, colour);
+        
+    }
+    else if(count < 1000)
+    {
+        writeDigit(column + 28, row, count % 10, colour);
+        writeDigit(column + 19, row, (count / 10) %  10, colour);
+        writeDigit(column + 10, row, count / 100, colour);
+    }
+    else if(count < 10000)
+    {
+        writeDigit(column + 32, row, count % 10, colour);
+        writeDigit(column + 23, row, count / 10 % 10, colour);
+        writeDigit(column + 14, row, count / 100 % 10, colour);
+        writeDigit(column + 5, row, count / 1000, colour);
+    }
+    else if(count < 100000)
+    {
+        writeDigit(column + 37, row, count % 10, colour);
+        writeDigit(column + 28, row, count / 10 % 10, colour);
+        writeDigit(column + 19, row, count / 100 % 10, colour);
+        writeDigit(column + 10, row, count / 1000 % 10, colour);
+        writeDigit(column + 1, row, count / 10000, colour);
+    }
+    else
+    {
+    SEGGER_RTT_WriteString(0, "\nERROR: Count Overflow");
+    }
+    
+}
+
+// Draw step count using drawCount
+void drawSteps(uint8_t step_count, uint8_t mode)
+{
+    uint32_t colour;
+    
+    if(step_count >= STEP_THRESHOLD)
+    {
+        colour = GREEN;
+    }
+    else{
+        colour = WHITE;
+    }
+    
+    if(mode == REST)
+    {
+        colour = colour & DIM;
+    }
+    
+    drawCount(0, 42, step_count, colour);
+}
+
+// Draw cal count using drawCount
+void drawCals(uint32_t cals, uint8_t mode)
+{
+    uint32_t colour;
+    
+    // Divide by 1000 to get back into Kcals
+    cals = cals / 1000;
+    
+    
+    if(cals >= CAL_THRESHOLD)
+    {
+        colour = GREEN;
+    }
+    else{
+        colour = WHITE;
+    }
+    
+    if(mode == REST)
+    {
+        colour = colour & DIM;
+    }
+    
+    drawCount(51, 42, cals, colour);
+}
+
+
