@@ -42,6 +42,22 @@ bool        step_buff[STEP_BUFF_LENGTH] =   {0};                                
 int8_t      n                           =   BUFF_LENGTH - 1;                    // Index of last number in buffer
 uint8_t steps_in_buffer                 =   0;                                  // Keep track of how many steps in buffer for mode selection
 
+volatile uint8_t	inBuffer[1];
+volatile uint8_t	payloadBytes[1];
+
+
+/*
+ *	Override Warp firmware's use of these pins and define new aliases.
+ */
+enum
+{
+	kSSD1331PinMOSI		= GPIO_MAKE_PIN(HW_GPIOA, 8),
+	kSSD1331PinSCK		= GPIO_MAKE_PIN(HW_GPIOA, 9),
+	kSSD1331PinCSn		= GPIO_MAKE_PIN(HW_GPIOB, 11),
+	kSSD1331PinDC		= GPIO_MAKE_PIN(HW_GPIOA, 12),
+	kSSD1331PinRST		= GPIO_MAKE_PIN(HW_GPIOB, 0),
+};
+
 static int
 writeCommand(uint8_t commandByte)
 {
