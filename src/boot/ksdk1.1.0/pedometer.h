@@ -1,3 +1,26 @@
+// Define some standard colours
+#define WHITE           0xFFFFFF
+#define RED             0xFF0000
+#define GREEN           0x00FF00
+#define BLUE            0x0000FF
+#define CYAN            0x00FFFF
+
+// Define a dimmed brightness
+#define DIM             0x0A0A0A
+
+// User defined thresholds for 'completing rings'
+#define STEP_THRESHOLD  10
+#define CAL_THRESHOLD   10
+
+// Modes
+#define REST            0
+#define WALK            1
+#define RUN             2
+
+// User defined parameters
+#define HEIGHT          183         // Height in cm
+#define WEIGHT          80          // Weight in kg
+
 int16_t combine_stream(int16_t x_data, int16_t y_data, int16_t z_data);
 void    lpf(void);
 void    diff(void);
