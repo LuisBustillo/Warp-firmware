@@ -43,8 +43,7 @@ typedef enum
 } SSD1331Commands;
 
 int	devSSD1331init(void);
-static int
-writeCommand(uint8_t commandByte);
+
 void devSSD1331green_rect(void);
 void clearScreen(void);
 void clearSection(uint8_t col_start, uint8_t row_start, uint8_t col_end, uint8_t row_end);

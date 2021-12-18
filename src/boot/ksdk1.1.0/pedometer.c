@@ -42,6 +42,40 @@ bool        step_buff[STEP_BUFF_LENGTH] =   {0};                                
 int8_t      n                           =   BUFF_LENGTH - 1;                    // Index of last number in buffer
 uint8_t steps_in_buffer                 =   0;                                  // Keep track of how many steps in buffer for mode selection
 
+static int
+writeCommand(uint8_t commandByte)
+{
+	spi_status_t status;
+
+	/*
+	 *	Drive /CS low.
+	 *
+	 *	Make sure there is a high-to-low transition by first driving high, delay, then drive low.
+	 */
+	GPIO_DRV_SetPinOutput(kSSD1331PinCSn);
+	//OSA_TimeDelay(10);
+	GPIO_DRV_ClearPinOutput(kSSD1331PinCSn);
+
+	/*
+	 *	Drive DC low (command).
+	 */
+	GPIO_DRV_ClearPinOutput(kSSD1331PinDC);
+
+	payloadBytes[0] = commandByte;
+	status = SPI_DRV_MasterTransferBlocking(0	/* master instance */,
+					NULL		/* spi_master_user_config_t */,
+					(const uint8_t * restrict)&payloadBytes[0],
+					(uint8_t * restrict)&inBuffer[0],
+					1		/* transfer size */,
+					1000		/* timeout in microseconds (unlike I2C which is ms) */);
+
+	/*
+	 *	Drive /CS high
+	 */
+	GPIO_DRV_SetPinOutput(kSSD1331PinCSn);
+
+	return status;
+}
 
 
 // Combine the stream from x,y,z by squaring, adding and square-rooting
