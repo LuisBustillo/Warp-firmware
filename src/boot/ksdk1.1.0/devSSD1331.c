@@ -176,6 +176,9 @@ void clearScreen(void)
     return;
 }
 
+/*
+Helper functions for Drawing the Pedometer interface
+*/
 
 void clearSection(uint8_t column, uint8_t row, uint8_t across, uint8_t down){
     
