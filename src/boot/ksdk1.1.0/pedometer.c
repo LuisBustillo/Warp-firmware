@@ -174,7 +174,7 @@ uint32_t calcDistance(uint32_t distance){
     uint32_t stride = 0;
 
     stride = calcStride(HEIGHT)/100;
-    return distance + round(stride*steps_in_buffer)
+    return distance + round(stride*steps_in_buffer);
 }
 
 // Calculate Current Speed
@@ -182,7 +182,7 @@ uint16_t calcSpeed(void){
     uint32_t stride = 0;
 
     stride = calcStride(HEIGHT)/100;
-    return round((steps_in_buffer*stride)/3)
+    return round((steps_in_buffer*stride)/3);
 }
 
 // Main function to count steps
