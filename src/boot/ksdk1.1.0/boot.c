@@ -1943,7 +1943,7 @@ main(void)
                     if (setting == 2){
         				// CALS
 						drawDist(distance, mode);
-
+					}
                     ticks3 = 0;
                 }
         
@@ -1988,5 +1988,6 @@ main(void)
                 }
 }
 }
+
 
 
