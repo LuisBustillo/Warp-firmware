@@ -69,7 +69,20 @@ drawRect(uint8_t start_x, uint8_t start_y, uint8_t width_x, uint8_t width_y, uin
 
 }
 
-
+void
+drawLine(uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y, uint8_t * colours){
+	uint8_t red = colours[0];
+	uint8_t green = colours[1];
+	uint8_t blue = colours[2];
+	writeCommand(kSSD1331CommandDRAWLINE);
+	writeCommand(start_x);
+	writeCommand(start_y);
+	writeCommand(end_x);
+	writeCommand(end_y);
+	writeCommand(blue);
+	writeCommand(green);
+	writeCommand(red);
+}
 
 // Implementing writing to screen based on implementation in Adafruit_GFX Library:
 void
