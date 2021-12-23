@@ -9,7 +9,6 @@
 #include "fsl_port_hal.h"
 
 #include "SEGGER_RTT.h"
-//#include "SEGGER_RTT_printf.c"
 #include "gpio_pins.h"
 #include "warp.h"
 #include "devSSD1331.h"
@@ -356,6 +355,18 @@ void writeCharacter(uint8_t column, uint8_t row, char character, uint32_t colour
         drawLine(column, row + 8, 2, 2, colour);
         drawLine(column + 2, row + 10, 2, 0, colour);
         drawLine(column + 4, row + 10, 2, -2, colour);
+
+        break;
+    }
+    case 'D':
+    {
+        
+        drawLine(column, row, 0, 10, colour);
+        drawLine(column, row, 3, 0, colour);
+        drawLine(column, row + 10, 3, 0, colour);
+        drawLine(column + 6, row + 2, 0, 6, colour);
+        drawLine(column + 4, row, 2, 2, colour);
+        drawLine(column + 4, row + 8, 2, -2, colour);
 
         break;
     }

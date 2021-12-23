@@ -9,7 +9,6 @@
 #include "fsl_port_hal.h"
 
 #include "SEGGER_RTT.h"
-//#include "SEGGER_RTT_printf.c"
 #include "gpio_pins.h"
 #include "warp.h"
 #include "devSSD1331_extra.h"
@@ -47,23 +46,6 @@ bool wrap = true;
 uint8_t textcolor[3];
 uint8_t textbg[3];
 
-
-
-void
-drawLine(uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y, uint8_t * colours){
-	uint8_t red = colours[0];
-	uint8_t green = colours[1];
-	uint8_t blue = colours[2];
-	writeCommand(kSSD1331CommandDRAWLINE);
-	writeCommand(start_x);
-	writeCommand(start_y);
-	writeCommand(end_x);
-	writeCommand(end_y);
-	writeCommand(blue);
-	writeCommand(green);
-	writeCommand(red);
-
-}
 
 void
 drawRect(uint8_t start_x, uint8_t start_y, uint8_t width_x, uint8_t width_y, uint8_t * colours) {

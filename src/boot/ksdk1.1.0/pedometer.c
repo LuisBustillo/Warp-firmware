@@ -1,5 +1,12 @@
 /*
     Authored 2021-2022. Luis Bustillo
+
+    With contributions from:
+    - 'Full-Featured Pedometer Design Realized with 3-Axis Digital Accelerometer' -> Neil Zhao
+    - https://github.com/nerajbobra/embedded_pedometer
+    - 'Open-source algorithm for wearables in healthcare-applications' -> Anna Brondin & Marcus Nordstrom at Malmö University
+       https://github.com/Oxford-step-counter/C-Step-Counter
+    -  https://github.com/adamgoldney/Warp-Pedometer -> Adam Goldney
  */
 
 #include <stdlib.h>
@@ -17,7 +24,6 @@
 
 #include "gpio_pins.h"
 #include "SEGGER_RTT.h"
-//#include "SEGGER_RTT_printf.c"
 #include "warp.h"
 
 #include "devMMA8451Q.h"
@@ -99,9 +105,9 @@ int16_t  combine_stream(int16_t x_data, int16_t y_data, int16_t z_data){
     
     int16_t comb_data = (int16_t)sqrt(x_data*x_data + y_data*y_data + z_data*z_data);
     
-    //SEGGER_RTT_printf(0, "%d, ", x_data);
-    //SEGGER_RTT_printf(0, "%d, ", y_data);
-    //SEGGER_RTT_printf(0, "%d, ", z_data);
+    warpPrint(" %d,", x_data);
+    warpPrint(" %d,", y_data);
+    warpPrint(" %d,", z_data);
     //SEGGER_RTT_printf(0, "%d\n", comb_data);
     
     
@@ -132,6 +138,51 @@ void  diff(void){
     }
     // Store in derivative buffer
     deriv_buff[n] = moving_deriv;
+}
+
+// Calculate Stride length
+uint32_t calcStride(uint8_t height){
+    uint8_t steps_in_2s = 0;
+
+    steps_in_2s = steps_in_buffer/1.5;
+
+    if (steps_in_2s <= 2){
+        return height/5;
+    }
+    else if (steps_in_2s > 2 && steps_in_2s <= 3){
+        return height/4;
+    }
+    else if (steps_in_2s > 3 && steps_in_2s <= 4){
+        return height/3;
+    }
+    else if (steps_in_2s > 4 && steps_in_2s <= 5){
+        return height/2;
+    }
+    else if (steps_in_2s > 5 && steps_in_2s <= 6){
+        return height/1.2;
+    }
+    else if (steps_in_2s > 6 && steps_in_2s <= 8){
+        return height;
+    }
+    else  {
+        return height*1.2;
+    }
+}
+
+// Calculate Total distance travelled
+uint32_t calcDistance(uint32_t distance){
+    uint32_t stride = 0;
+
+    stride = calcStride(HEIGHT)/100;
+    return distance + round(stride*steps_in_buffer)
+}
+
+// Calculate Current Speed
+uint16_t calcSpeed(void){
+    uint32_t stride = 0;
+
+    stride = calcStride(HEIGHT)/100;
+    return round((steps_in_buffer*stride)/3)
 }
 
 // Main function to count steps
@@ -271,8 +322,12 @@ uint8_t modeSelector(uint8_t mode, uint32_t last_step_time)
     }
 }
 
+/*
+UI and UX for OLED borrowed from Adam Goldney https://github.com/adamgoldney/Warp-Pedometer
+*/
+
 // Draw the background
-void displayBackground(uint8_t mode)
+void displayBackground(uint8_t mode, uint8_t setting)
 {
     uint32_t text_colour;
     uint32_t line_colour;
@@ -295,11 +350,35 @@ void displayBackground(uint8_t mode)
     writeCharacter(26, 63, 'P', text_colour);
     writeCharacter(34, 63, 'S', text_colour);
 
-    // CALS
+    if (setting == 1){
+
+        // CALS
     writeCharacter(57, 63, 'C', text_colour);
     writeCharacter(65, 63, 'A', text_colour);
     writeCharacter(73, 63, 'L', text_colour);
     writeCharacter(81, 63, 'S', text_colour);
+
+    }
+    else if (setting == 2){
+
+        // DIST
+    writeCharacter(57, 63, 'D', text_colour);
+    writeCharacter(65, 63, 'I', text_colour);
+    writeCharacter(73, 63, 'S', text_colour);
+    writeCharacter(81, 63, 'T', text_colour);
+
+    }
+
+    else if (setting == 3){ 
+
+        // SPEED
+    writeCharacter(55, 63, 'S', text_colour);
+    writeCharacter(63, 63, 'P', text_colour);
+    writeCharacter(71, 63, 'E', text_colour);
+    writeCharacter(79, 63, 'E', text_colour);
+    writeCharacter(87, 63, 'D', text_colour);
+
+    }
     
     // Draw Line
     writeCommand(kSSD1331CommandDRAWLINE);
@@ -360,7 +439,7 @@ void displayMode(uint8_t mode)
     }
 }
 
-// Draw the various counts - keep centred wit number of digits
+// Draw the various counts - keep centred with number of digits
 void drawCount(uint8_t column, uint8_t row, uint32_t count, uint32_t colour)
 {
     
@@ -423,6 +502,38 @@ void drawSteps(uint8_t step_count, uint8_t mode)
     }
     
     drawCount(0, 42, step_count, colour);
+}
+
+void drawDist(uint32_t distance, uint8_t mode)
+{
+    uint32_t colour;
+    
+    if(distance >= DIST_THRESHOLD)
+    {
+        colour = GREEN;
+    }
+    else{
+        colour = WHITE;
+    }
+    
+    if(mode == REST)
+    {
+        colour = colour & DIM;
+    }
+    
+    drawCount(51, 42, distance, colour);
+}
+
+void drawSpeed(uint32_t speed, uint8_t mode)
+{
+    uint32_t colour = WHITE;
+    
+    if(mode == REST)
+    {
+        colour = colour & DIM;
+    }
+    
+    drawCount(51, 42, speed, colour);
 }
 
 // Draw cal count using drawCount

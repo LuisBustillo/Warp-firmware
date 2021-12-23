@@ -3,6 +3,7 @@
         "fsl_port_hal.h": "c",
         "segger_rtt.h": "c",
         "fsl_mcglite_hal.h": "c",
-        "devmma8451q.h": "c"
+        "devmma8451q.h": "c",
+        "fsl_spi_master_driver.h": "c"
     }
 }

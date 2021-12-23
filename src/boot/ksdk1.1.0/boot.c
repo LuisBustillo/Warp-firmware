@@ -1591,19 +1591,6 @@ main(void)
 	warpPrint("done.\n");
 
 	/*
-	 *	Toggle LED3 (kWarpPinSI4705_nRST on Warp revB, kGlauxPinLED on Glaux)
-	 */
-	#if (WARP_BUILD_ENABLE_GLAUX_VARIANT)
-		blinkLED(kGlauxPinLED);
-		blinkLED(kGlauxPinLED);
-		blinkLED(kGlauxPinLED);
-
-		USED(disableTPS62740);
-		USED(enableTPS62740);
-		USED(setTPS62740CommonControlLines);
-	#endif
-
-	/*
 	 *	Initialize all the sensors
 	 */
 	#if (WARP_BUILD_ENABLE_DEVBMX055)
@@ -1743,47 +1730,6 @@ main(void)
 		}
 	#endif
 
-	#if (WARP_BUILD_ENABLE_DEVIS25xP && WARP_BUILD_ENABLE_GLAUX_VARIANT)
-		/*
-		 *	Only supported in Glaux.
-		 */
-		initIS25xP(kGlauxPinFlash_SPI_nCS,						kWarpDefaultSupplyVoltageMillivoltsIS25xP	);
-
-		uint8_t	ops1[] = {0x9F /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */};
-		status = spiTransactionIS25xP(ops1, sizeof(ops1)/sizeof(uint8_t) /* opCount */);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("IS25xP: SPI transaction to read JEDEC ID failed...\n");
-		}
-		else
-		{
-			warpPrint("IS25xP JEDEC ID = [0x%X] [0x%X] [0x%X]\n", deviceIS25xPState.spiSinkBuffer[1], deviceIS25xPState.spiSinkBuffer[2], deviceIS25xPState.spiSinkBuffer[3]);
-		}
-
-		uint8_t	ops2[] = {0x90 /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */};
-		status = spiTransactionIS25xP(ops2, sizeof(ops2)/sizeof(uint8_t) /* opCount */);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("IS25xP: SPI transaction to read Manufacturer ID failed...\n");
-		}
-		else
-		{
-			warpPrint("IS25xP Manufacturer ID = [0x%X] [0x%X] [0x%X]\n", deviceIS25xPState.spiSinkBuffer[3], deviceIS25xPState.spiSinkBuffer[4], deviceIS25xPState.spiSinkBuffer[5]);
-		}
-
-		uint8_t	ops3[] = {0xAB /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */};
-		status = spiTransactionIS25xP(ops3, sizeof(ops3)/sizeof(uint8_t) /* opCount */);
-				if (status != kWarpStatusOK)
-		{
-			warpPrint("IS25xP: SPI transaction to read Flash ID failed...\n");
-		}
-		else
-		{
-			warpPrint("IS25xP Flash ID = [0x%X]\n", deviceIS25xPState.spiSinkBuffer[4]);
-		}
-		
-	#endif
-
 	#if (WARP_BUILD_ENABLE_DEVISL23415)
 		/*
 		 *	Only supported in main Warp variant.
@@ -1904,135 +1850,10 @@ main(void)
 		 */
 	#endif
 
-	#if (WARP_BUILD_ENABLE_GLAUX_VARIANT)
-		printBootSplash(gWarpCurrentSupplyVoltage, menuRegisterAddress, &powerManagerCallbackStructure);
-
-		#if (WARP_BUILD_ENABLE_DEVIS25xP)
-			warpPrint("About to read IS25xP JEDEC ID...\n");
-			//spiTransactionIS25xP({0x9F /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */, 0x00 /* op5 */, 0x00 /* op6 */}, 5 /* opCount */);
-			warpPrint("IS25xP JEDEC ID = [0x%X] [0x%X] [0x%X]\n", deviceIS25xPState.spiSinkBuffer[1], deviceIS25xPState.spiSinkBuffer[2], deviceIS25xPState.spiSinkBuffer[3]);
-
-			warpPrint("About to read IS25xP Manufacturer ID...\n");
-			//spiTransactionIS25xP({0x90 /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */, 0x00 /* op5 */, 0x00 /* op6 */}, 5 /* opCount */);
-			warpPrint("IS25xP Manufacturer ID = [0x%X] [0x%X] [0x%X]\n", deviceIS25xPState.spiSinkBuffer[3], deviceIS25xPState.spiSinkBuffer[4], deviceIS25xPState.spiSinkBuffer[5]);
-
-			warpPrint("About to read IS25xP Flash ID (also releases low-power mode)...\n");
-			//spiTransactionIS25xP({0xAB /* op0 */,  0x00 /* op1 */,  0x00 /* op2 */, 0x00 /* op3 */, 0x00 /* op4 */, 0x00 /* op5 */, 0x00 /* op6 */}, 5 /* opCount */);
-			warpPrint("IS25xP Flash ID = [0x%X]\n", deviceIS25xPState.spiSinkBuffer[4]);
-		#endif
-
-		warpPrint("About to activate low-power modes (including IS25xP Flash)...\n");
-		activateAllLowPowerSensorModes(true /* verbose */);
-
-		uint8_t	tmpRV8803RegisterByte;
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegSec, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegSec, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegSec = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegMin, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegMin, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegMin = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegHour, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegHour, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegHour = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegExt, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegExt, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegExt = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegFlag, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegFlag, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegFlag = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		status = readRTCRegisterRV8803C7(kWarpRV8803RegCtrl, &tmpRV8803RegisterByte);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("readRTCRegisterRV8803C7(kWarpRV8803RegCtrl, &tmpRV8803RegisterByte) failed\n");
-		}
-		else
-		{
-			warpPrint("kWarpRV8803RegCtrl = [0x%X]\n", tmpRV8803RegisterByte);
-		}
-
-		warpPrint("About to configureSensorBME680() for measurement...\n");
-		status = configureSensorBME680(	0b00000001,	/*	payloadCtrl_Hum: Humidity oversampling (OSRS) to 1x				*/
-						0b00100100,	/*	payloadCtrl_Meas: Temperature oversample 1x, pressure overdsample 1x, mode 00	*/
-						0b00001000	/*	payloadGas_0: Turn off heater							*/
-						);
-		if (status != kWarpStatusOK)
-		{
-			warpPrint("configureSensorBME680() failed...\n");
-		}
-
-		warpDisableI2Cpins();
-
-		warpPrint("About to loop with printSensorDataBME680()...\n");
-		while (1)
-		{
-			blinkLED(kGlauxPinLED);
-			for (int i = 0; i < kGlauxSensorRepetitionsPerSleepIteration; i++)
-			{
-				printAllSensors(true /* printHeadersAndCalibration */, true /* hexModeFlag */, 0 /* menuDelayBetweenEachRun */, true /* loopForever */);
-			}
-
-			warpPrint("About to configureSensorBME680() for sleep...\n");
-			status = configureSensorBME680(	0b00000000,	/*	payloadCtrl_Hum: Sleep							*/
-							0b00000000,	/*	payloadCtrl_Meas: No temperature samples, no pressure samples, sleep	*/
-							0b00001000	/*	payloadGas_0: Turn off heater						*/
-						);
-			if (status != kWarpStatusOK)
-			{
-				warpPrint("configureSensorBME680() failed...\n");
-			}
-			warpDisableI2Cpins();
-			blinkLED(kGlauxPinLED);
-
-			warpPrint("About to go into VLLS0 for 30 (was 60*60) seconds (will reset afterwords)...\n");
-			status = warpSetLowPowerMode(kWarpPowerModeVLLS0, kGlauxSleepSecondsBetweenSensorRepetitions /* sleep seconds */);
-			if (status != kWarpStatusOK)
-			{
-				warpPrint("warpSetLowPowerMode(kWarpPowerModeVLLS0, 10)() failed...\n");
-			}
-			warpPrint("Should not get here...");
-		}
-	#endif
-
-    
     devSSD1331init();
 
 
-    // Configure accelerometer - set high pass filter to remove gravity offset
+    // Configure accelerometer sensor - set high pass filter to remove gravity offset
     configureSensorMMA8451Q(0x00,/* Payload: Disable FIFO */
                             0x00,/* Normal read 14bit, 800Hz, normal, standby mode to write HP */
                             0x11,/* 4G Scale, HPF data enabled */
@@ -2041,22 +1862,38 @@ main(void)
 
     
     uint32_t    step_count          = 0;            // Tracks step count
+	uint32_t 	distance			= 0;			// Distance in m
+	uint16_t	speed				= 0;			// Speed in m/s
     uint32_t    last_step_count     = 0;            // Tracks last step count
     uint32_t    cal_count           = 0;            // Tracks calories (Kcal / 1000)
-    uint8_t     mode                = 0;            // Tracks mode
-    uint8_t     last_mode           = 0;            // Tracks last mode
+    uint8_t     mode                = 0;            // Tracks exercise mode
+    uint8_t     last_mode           = 0;            // Tracks previous exercise mode
     uint32_t    start_time          = 0;            // Time at start of cycle
     uint8_t     run_time            = 0;            // Time for one cycle to run
     uint32_t    last_step_time      = 0;            // Last step time
     uint8_t     ticks               = 0;            // Tracks seconds as measured by 50 cycles
-
+	uint8_t		ticks3				= 0;			// Tracks 3 seconds 
+	uint8_t 	setting 			= 1;			// Toggle betwwen different display versions
     
     
     // Initialise display information
-    displayBackground(mode);
+    displayBackground(mode, setting);
     displayMode(mode);
     drawSteps(step_count,mode);
-    drawCals(cal_count,mode);
+
+	if (setting == 1){
+        // CALS
+		drawCals(cal_count, mode);
+    }
+    else if (setting == 2){
+        // DIST
+		drawDist(distance, mode);
+    }
+    else if (setting == 3){  
+        // SPEED
+		drawSpeed(speed, mode);
+    }
+    
 
     warpPrint("\nRunning...\n\r");
     
@@ -2064,25 +1901,50 @@ main(void)
                 // Measure start time
                 start_time = OSA_TimeGetMsec();
                 ticks ++;
+				ticks3 ++;
 
                 // Reset steps when 100000 is reached to avoid overflow
                 if(step_count >= 100000)
                 {
                     step_count = 0;
                     cal_count = 0;
+					distance = 0;
                 }
                 
         
                 // Count steps
                 step_count = countSteps(step_count);
                 mode = modeSelector(mode, last_step_time);
+				
                 
-                // Count and update cals every second (every 50 cycles)
+                // Count and update cals/speed every second (every 50 cycles)
                 if(ticks >= 50)
                 {
                     cal_count = countCals(cal_count, HEIGHT, WEIGHT);
-                    drawCals(cal_count, mode);
+					speed = calcSpeed();
+
+                    if (setting == 1){
+        				// CALS
+						drawCals(cal_count, mode);
+    				}
+    				else if (setting == 3) {  
+        				// SPEED
+						drawSpeed(speed, mode);
+    				}
+
                     ticks = 0;
+                }
+
+				// Count and update dist every 3 seconds (every 150 cycles)
+                if(ticks3 >= 150)
+                {
+                    distance = calcDistance(distance);
+
+                    if (setting == 2){
+        				// CALS
+						drawDist(distance, mode);
+
+                    ticks3 = 0;
                 }
         
 
@@ -2098,8 +1960,19 @@ main(void)
                 // Update mode
                 if(last_mode != mode)
                 {
-                    drawCals(cal_count, mode);
-                    displayBackground(mode);
+                    if (setting == 1){
+        				// CALS
+						drawCals(cal_count, mode);
+    				}
+    				else if (setting == 2){
+        				// DIST
+						drawDist(distance, mode);
+    				}
+    				else if (setting == 3){  
+        				// SPEED
+						drawSpeed(speed, mode);
+    				}
+                    displayBackground(mode, setting);
                     displayMode(mode);
                     drawSteps(step_count, mode);
                     

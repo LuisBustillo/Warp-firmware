@@ -54,7 +54,6 @@
 
 #include "gpio_pins.h"
 #include "SEGGER_RTT.h"
-//#include "SEGGER_RTT_printf.c"
 #include "warp.h"
 
 #include "devMMA8451Q.h"
