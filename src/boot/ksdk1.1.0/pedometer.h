@@ -26,7 +26,7 @@ int16_t combine_stream(int16_t x_data, int16_t y_data, int16_t z_data);
 void    lpf(void);
 void    diff(void);
 
-uint32_t calcStride(uint8_t height);
+float calcStride(uint8_t height);
 uint32_t calcDistance(uint32_t distance);
 uint16_t calcSpeed(void);
 

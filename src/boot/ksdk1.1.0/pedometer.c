@@ -142,7 +142,7 @@ void  diff(void){
 }
 
 // Calculate Stride length
-uint32_t calcStride(uint8_t height){
+float calcStride(uint8_t height){
     uint8_t steps_in_2s = 0;
 
     steps_in_2s = steps_in_buffer/1.5;
@@ -165,14 +165,14 @@ uint32_t calcStride(uint8_t height){
     else if (steps_in_2s > 6 && steps_in_2s <= 8){
         return height;
     }
-    else  {
+    else if (steps_in_2s >= 8) {
         return height*1.2;
     }
 }
 
 // Calculate Total distance travelled
 uint32_t calcDistance(uint32_t distance){
-    uint32_t stride = 0;
+    float stride = 0;
 
     stride = calcStride(HEIGHT)/100;
     distance += round(stride*steps_in_buffer);
@@ -181,7 +181,7 @@ uint32_t calcDistance(uint32_t distance){
 
 // Calculate Current Speed
 uint16_t calcSpeed(void){
-    uint32_t stride = 0;
+    float stride = 0;
 
     stride = calcStride(HEIGHT)/100;
     return round((steps_in_buffer*stride)/3);
