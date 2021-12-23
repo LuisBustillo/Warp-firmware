@@ -108,6 +108,7 @@ int16_t  combine_stream(int16_t x_data, int16_t y_data, int16_t z_data){
     warpPrint(" %d,", x_data);
     warpPrint(" %d,", y_data);
     warpPrint(" %d,", z_data);
+    warpPrint("\n");
     //SEGGER_RTT_printf(0, "%d\n", comb_data);
     
     
