@@ -1873,7 +1873,7 @@ main(void)
     uint32_t    last_step_time      = 0;            // Last step time
     uint8_t     ticks               = 0;            // Tracks seconds as measured by 50 cycles
 	uint8_t		ticks3				= 0;			// Tracks 3 seconds 
-	uint8_t 	setting 			= 1;			// Toggle betwwen different display versions
+	uint8_t 	setting 			= 3;			// Toggle betwwen different display versions
     
     
     // Initialise display information
