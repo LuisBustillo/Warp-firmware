@@ -1,5 +1,6 @@
 /*
 	Authored 2016-2018. Phillip Stanley-Marbell.
+	Modified 2021-2022. Luis Bustillo
 
 	Additional contributions, 2018 onwards: See git blame.
 
@@ -1873,8 +1874,8 @@ main(void)
     uint32_t    last_step_time      = 0;            // Last step time
     uint8_t     ticks               = 0;            // Tracks seconds as measured by 50 cycles
 	uint8_t		ticks3				= 0;			// Tracks 3 seconds 
-	uint8_t 	setting 			= 3;			// Toggle betwwen different display versions
-    
+	uint8_t 	setting 			= 2;			// Toggle between different display versions (1,2,3)
+													
     
     // Initialise display information
     displayBackground(mode, setting);

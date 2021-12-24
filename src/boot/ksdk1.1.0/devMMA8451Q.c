@@ -1,5 +1,8 @@
 /*
-	Authored 2016-2018. Phillip Stanley-Marbell. Additional contributors,
+	Authored 2016-2018. Phillip Stanley-Marbell. 
+	Modified 2021-2022. Luis Bustillo
+	
+	Additional contributors,
 	2018-onwards, see git log.
 
 	All rights reserved.
@@ -128,7 +131,7 @@ writeSensorRegisterMMA8451Q(uint8_t deviceRegister, uint8_t payload)
 
 	return kWarpStatusOK;
 }
-
+// Function modified to be able to configure additional register for the IMU
 WarpStatus
 configureSensorMMA8451Q(uint8_t payloadF_SETUP, uint8_t payloadCTRL_REG1_STB, uint8_t payloadXYZ_DATA, uint8_t payloadHP_CUTOFF, uint8_t payloadCTRL_REG1_ACT)
 {
@@ -313,6 +316,7 @@ printSensorDataMMA8451Q(bool hexModeFlag)
 	}
 }
 
+// Function to extract acceleration data for the X-axis. Adapted from printSensorDataMMA8451Q above
 int16_t readAxis_x(void)
 {
     uint16_t    readSensorRegisterValueLSB;
@@ -352,6 +356,7 @@ int16_t readAxis_x(void)
     }
 }
 
+// Function to extract acceleration data for the Y-axis. Adapted from printSensorDataMMA8451Q above
 int16_t readAxis_y(void)
 {
     uint16_t    readSensorRegisterValueLSB;
@@ -379,7 +384,7 @@ int16_t readAxis_y(void)
     }
 }
 
-
+// Function to extract acceleration data for the Z-axis. Adapted from printSensorDataMMA8451Q above
 int16_t readAxis_z(void)
 {
     uint16_t    readSensorRegisterValueLSB;

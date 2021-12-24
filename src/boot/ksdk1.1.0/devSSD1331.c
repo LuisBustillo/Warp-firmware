@@ -1,3 +1,5 @@
+// Modified 2021-2022. Luis Bustillo
+
 #include <stdint.h>
 
 /*
@@ -176,7 +178,7 @@ void clearScreen(void)
 }
 
 /*
-Helper functions for Drawing the Pedometer interface
+Helper functions for Drawing the Pedometer interface defined in pedometer.c
 */
 
 void clearSection(uint8_t column, uint8_t row, uint8_t across, uint8_t down){
@@ -209,7 +211,7 @@ void drawLine(uint8_t column, uint8_t row, uint8_t across, uint8_t down, uint32_
 }
 
 
-// Draws digits in a 7x11 shaped box starting at the top left coordinates given
+// Draws digits 0-9 in a 7x11 shaped box starting at the top left coordinates given
 void writeDigit(uint8_t column, uint8_t row, uint8_t digit, uint32_t colour)
 {
     clearSection(column, row, 6, 10);
@@ -327,7 +329,7 @@ void writeDigit(uint8_t column, uint8_t row, uint8_t digit, uint32_t colour)
     return;
 }
 
-// Writes a character symbol in a 7x11 sized box
+// Writes a character symbol in a 7x11 sized box. Only the characters used in the implementation have been worked out
 void writeCharacter(uint8_t column, uint8_t row, char character, uint32_t colour)
 {
     clearSection(column, row, 6, 10);
