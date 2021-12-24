@@ -53,7 +53,7 @@ volatile uint8_t	payloadBytes[1];
 
 
 /*
- *	Override Warp firmware's use of these pins and define new aliases.
+ *	Override Warp firmware's use of these pins and define new aliases for our build.
  */
 enum
 {
